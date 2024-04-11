@@ -1,25 +1,24 @@
 import streamlit as st
-import sqlite3
-
-conn = sqlite3.connect('feedback.db')
-c = conn.cursor()
-
-c.execute('''CREATE TABLE IF NOT EXISTS results (
-                name TEXT PRIMARY KEY,
-                NPS INTEGER,
-                like1 TEXT,
-                text_feedback TEXT
-            )''')
-
-
+import pandas as pd
+import os
 
 def collect_feedback(name, NPS, like1, text_feedback):
-    # Insert feedback into database
-    c.execute("INSERT INTO results (name, NPS, like1, text_feedback) VALUES (?, ?, ?, ?)",
-              (name, NPS, like1, text_feedback))
-    conn.commit()
+    feedback_data = {
+        'Name': [name],
+        'NPS': [NPS],
+        'Liked Most': [like1],
+        'Additional Feedback': [text_feedback]
+    }
 
+    feedback_df = pd.DataFrame(feedback_data)
 
+    # Check if the CSV file exists
+    if not os.path.exists('feedback.csv'):
+        # If it doesn't exist, create a new CSV file and write the DataFrame to it
+        feedback_df.to_csv('feedback.csv', index=False)
+    else:
+        # If it exists, append the DataFrame to the existing CSV file
+        feedback_df.to_csv('feedback.csv', mode='a', header=False, index=False)
 
 def main():
     st.title("Book Club Feedback")
