@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import os
+import pathlib
 
 def collect_feedback(name, NPS, like1, text_feedback):
     feedback_data = {
@@ -12,13 +12,16 @@ def collect_feedback(name, NPS, like1, text_feedback):
 
     feedback_df = pd.DataFrame(feedback_data)
 
+    # Get the path to the CSV file
+    csv_file_path = pathlib.Path('feedback.csv')
+
     # Check if the CSV file exists
-    if not os.path.exists('feedback.csv'):
+    if not csv_file_path.exists():
         # If it doesn't exist, create a new CSV file and write the DataFrame to it
-        feedback_df.to_csv('feedback.csv', index=False)
+        feedback_df.to_csv(csv_file_path, index=False)
     else:
         # If it exists, append the DataFrame to the existing CSV file
-        feedback_df.to_csv('feedback.csv', mode='a', header=False, index=False)
+        feedback_df.to_csv(csv_file_path, mode='a', header=False, index=False)
 
 def main():
     st.title("Book Club Feedback")
