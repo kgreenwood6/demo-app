@@ -1,28 +1,18 @@
 import streamlit as st
-import pandas as pd
-import pathlib
+import csv
 
 def collect_feedback(name, NPS, like1, text_feedback):
-    feedback_data = {
-        'Name': [name],
-        'NPS': [NPS],
-        'Liked Most': [like1],
-        'Additional Feedback': [text_feedback]
-    }
+    # For local saving
+    with open('feedback.csv', 'a', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow([name, NPS, like1, text_feedback])
 
-    feedback_df = pd.DataFrame(feedback_data)
-
-    # Get the path to the CSV file
-    #csv_file_path = pathlib.Path('feedback.csv')
-    csv_file_path = "C:/Users/green/OneDrive/Documents/Georgia Tech/CSE6242/feedback_df.csv"
-
-    # Check if the CSV file exists
-    if not csv_file_path.exists():
-        # If it doesn't exist, create a new CSV file and write the DataFrame to it
-        feedback_df.to_csv(csv_file_path, index=False)
-    else:
-        # If it exists, append the DataFrame to the existing CSV file
-        feedback_df.to_csv(csv_file_path, mode='a', header=False, index=False)
+    # For saving in the GitHub repo
+    # Assuming your GitHub repo is already cloned in the EC2 instance
+    # Replace 'path_to_your_repo' with the actual path to your GitHub repo
+    with open('/demo-app/feedback.csv', 'a', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow([name, NPS, like1, text_feedback])
 
 def main():
     st.title("Book Club Feedback")
