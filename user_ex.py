@@ -1,24 +1,18 @@
 import streamlit as st
 import csv
-import os
+import boto3
+import io
 
-def collect_feedback(name, NPS, like1, text_feedback):
-    # For local saving
-    with open('feedback.csv', 'a', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow([name, NPS, like1, text_feedback])
+def collect_feedback(name, NPS, like1, text_feedback, bucket_name):
+    # Write the feedback to a CSV file in memory
+    csv_buffer = io.StringIO()
+    writer = csv.writer(csv_buffer)
+    writer.writerow(['Name', 'NPS', 'Liked', 'Feedback'])
+    writer.writerow([name, NPS, like1, text_feedback])
 
-    # For saving in the GitHub repo
-    repo_path = '/home/ubuntu/demo-app/demo-app/'  # Replace with the actual path to your GitHub repo
-    file_path = os.path.join(repo_path, 'feedback.csv')
-    if not os.path.exists(file_path):
-        with open(file_path, 'w', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow(['Name', 'NPS', 'Liked', 'Feedback'])
-
-    with open(file_path, 'a', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow([name, NPS, like1, text_feedback])
+    # Upload the CSV file to S3
+    s3 = boto3.client('s3')
+    s3.put_object(Bucket=bucket_name, Key='feedback.csv', Body=csv_buffer.getvalue())
 
 def main():
     st.title("Book Club Feedback")
@@ -30,7 +24,9 @@ def main():
     text_feedback = st.text_input("Any additional feedback")
 
     if st.button("Submit"):
-        collect_feedback(name, NPS, like1, text_feedback)
+        # Replace 'your_bucket_name' with your actual S3 bucket name
+        bucket_name = 'cse-group-project'
+        collect_feedback(name, NPS, like1, text_feedback, bucket_name)
         st.success("Thank you for your feedback!")
 
 if __name__ == "__main__":
