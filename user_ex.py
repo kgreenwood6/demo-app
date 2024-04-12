@@ -9,7 +9,7 @@ def collect_feedback(name, NPS, like1, text_feedback):
         writer.writerow([name, NPS, like1, text_feedback])
 
     # For saving in the GitHub repo
-    repo_path = '/home/ubuntu/demo-app/demo-app/feedback.csv'  # Replace with the actual path to your GitHub repo
+    repo_path = '/home/ubuntu/demo-app/demo-app/'  # Replace with the actual path to your GitHub repo
     file_path = os.path.join(repo_path, 'feedback.csv')
     if not os.path.exists(file_path):
         with open(file_path, 'w', newline='') as f:
