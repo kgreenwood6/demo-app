@@ -1,5 +1,6 @@
 import streamlit as st
 import csv
+import os
 
 def collect_feedback(name, NPS, like1, text_feedback):
     # For local saving
@@ -8,9 +9,14 @@ def collect_feedback(name, NPS, like1, text_feedback):
         writer.writerow([name, NPS, like1, text_feedback])
 
     # For saving in the GitHub repo
-    # Assuming your GitHub repo is already cloned in the EC2 instance
-    # Replace 'path_to_your_repo' with the actual path to your GitHub repo
-    with open('/home/ubuntu/demo-app/demo-app/feedback.csv', 'a', newline='') as f:
+    repo_path = '/home/ubuntu/demo-app/demo-app/feedback.csv'  # Replace with the actual path to your GitHub repo
+    file_path = os.path.join(repo_path, 'feedback.csv')
+    if not os.path.exists(file_path):
+        with open(file_path, 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(['Name', 'NPS', 'Liked', 'Feedback'])
+
+    with open(file_path, 'a', newline='') as f:
         writer = csv.writer(f)
         writer.writerow([name, NPS, like1, text_feedback])
 
