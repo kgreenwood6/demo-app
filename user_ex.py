@@ -10,7 +10,7 @@ def collect_feedback(name, NPS, like1, text_feedback):
     # For saving in the GitHub repo
     # Assuming your GitHub repo is already cloned in the EC2 instance
     # Replace 'path_to_your_repo' with the actual path to your GitHub repo
-    with open('/demo-app/feedback.csv', 'a', newline='') as f:
+    with open('/home/ubuntu/demo-app/demo-app/feedback.csv', 'a', newline='') as f:
         writer = csv.writer(f)
         writer.writerow([name, NPS, like1, text_feedback])
 
