@@ -3,20 +3,21 @@ import csv
 import os
 
 def collect_feedback(name, NPS, like1, text_feedback):
-    # Define the directory to save the CSV file
-    save_directory = 'C:\Users\green\OneDrive\Documents\Georgia Tech\CSE6242\'  # Replace with the desired directory
-
-    # Ensure that the directory exists, create it if it doesn't
-    os.makedirs(save_directory, exist_ok=True)
-
-    # Write the feedback to the CSV file
-    csv_file = os.path.join(save_directory, 'feedback.csv')
-    with open(csv_file, 'a', newline='') as f:
+    # For local saving
+    with open('feedback.csv', 'a', newline='') as f:
         writer = csv.writer(f)
-        # If the file is empty, write the header row
-        if os.stat(csv_file).st_size == 0:
+        writer.writerow([name, NPS, like1, text_feedback])
+
+    # For saving in the GitHub repo
+    repo_path = '/home/ubuntu/demo-app/demo-app/'  # Replace with the actual path to your GitHub repo
+    file_path = os.path.join(repo_path, 'feedback.csv')
+    if not os.path.exists(file_path):
+        with open(file_path, 'w', newline='') as f:
+            writer = csv.writer(f)
             writer.writerow(['Name', 'NPS', 'Liked', 'Feedback'])
-        # Write the feedback data
+
+    with open(file_path, 'a', newline='') as f:
+        writer = csv.writer(f)
         writer.writerow([name, NPS, like1, text_feedback])
 
 def main():
